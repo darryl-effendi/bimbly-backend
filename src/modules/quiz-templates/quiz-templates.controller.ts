@@ -1,0 +1,49 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
+import { QuizTemplatesService } from './quiz-templates.service';
+import { CreateQuizTemplateDto } from './dto/create-quiz-template.dto';
+import { UpdateQuizTemplateDto } from './dto/update-quiz-template.dto';
+
+@Controller('quiz-templates')
+export class QuizTemplatesController {
+  constructor(private readonly quizTemplatesService: QuizTemplatesService) {}
+
+  @Post()
+  create(@Request() req, @Body() createDto: CreateQuizTemplateDto) {
+    return this.quizTemplatesService.create(req.user.id, createDto);
+  }
+
+  @Get()
+  findAll(@Request() req) {
+    return this.quizTemplatesService.findAll(req.user.id);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.quizTemplatesService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Request() req, @Body() updateDto: UpdateQuizTemplateDto) {
+    return this.quizTemplatesService.update(id, req.user.id, updateDto);
+  }
+
+  @Post(':id/toggle-public')
+  togglePublic(@Param('id') id: string, @Request() req) {
+    return this.quizTemplatesService.togglePublic(id, req.user.id);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string, @Request() req) {
+    return this.quizTemplatesService.remove(id, req.user.id);
+  }
+}
